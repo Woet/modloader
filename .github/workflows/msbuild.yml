@@ -37,7 +37,7 @@ jobs:
         $PremakeExePath = Join-Path $PSScriptRoot "premake5.exe"
         if (-not (Test-Path $PremakeExePath)) {
           Write-Host "premake5.exe not found in repository root. Attempting to download."
-          $DownloadUrl = "https://github.com/premake/premake-core/releases/download/v5.0.0-beta7/premake-5.0.0-beta7-windows.zip"
+          $DownloadUrl = "https://github.com/premake/premake-core/releases/download/v5.0.0-alpha6/premake-5.0.0-alpha6-windows.zip"
           $ZipPath = Join-Path $PSScriptRoot "premake5.zip"
           Invoke-WebRequest -Uri $DownloadUrl -OutFile $ZipPath
           Expand-Archive -Path $ZipPath -DestinationPath $PSScriptRoot -Force
@@ -52,7 +52,7 @@ jobs:
     - name: Generate Visual Studio Solution Files
       # Use the 'vs2013' action as defined in your premake5.lua
       # We specify --outdir to keep the generated project files separate for CI purposes.
-      run: .\premake5.exe vs2022 --outdir=build_ci
+      run: .\premake5.exe vs2015 --outdir=build_ci
 
     - name: Build Solution (Debug Configuration)
       # Build the generated solution using MSBuild.
