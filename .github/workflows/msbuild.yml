@@ -18,6 +18,18 @@ jobs:
     - name: Checkout Repository
       uses: actions/checkout@v4
 
+    - name: setup-msbuild
+      uses: microsoft/setup-msbuild@v2
+      with:
+        # Folder location of where vswhere.exe is located if a self-hosted agent
+        vswhere-path: # optional
+        # Version of Visual Studio to search; defaults to latest if not specified
+        vs-version: 12.0
+        # Enable searching for pre-release versions of Visual Studio/MSBuild
+        vs-prerelease: # optional
+        # The preferred processor architecture of MSBuild. Can be either "x86", "x64", or "arm64". "x64" is only available from Visual Studio version 17.0 and later.
+        msbuild-architecture: # optional, default is x86
+        
     - name: Setup Premake5
       # Your premake5.lua implies premake5.exe is expected in the root.
       # This step ensures it's there or downloads a common beta version if not.
