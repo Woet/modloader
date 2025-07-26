@@ -25,7 +25,7 @@ jobs:
         $PremakeExePath = Join-Path $PSScriptRoot "premake5.exe"
         if (-not (Test-Path $PremakeExePath)) {
           Write-Host "premake5.exe not found in repository root. Attempting to download."
-          $DownloadUrl = "https://github.com/premake/premake-core/releases/download/v5.0.0-beta2/premake-5.0.0-beta2-windows.zip"
+          $DownloadUrl = "https://github.com/premake/premake-core/releases/download/v5.0.0-alpha6/premake-5.0.0-alpha6-windows.zip"
           $ZipPath = Join-Path $PSScriptRoot "premake5.zip"
           Invoke-WebRequest -Uri $DownloadUrl -OutFile $ZipPath
           Expand-Archive -Path $ZipPath -DestinationPath $PSScriptRoot -Force
@@ -51,7 +51,7 @@ jobs:
       # or upgrade the premake action to a newer VS version.
       run: |
         # Use MSBuild directly, it should be available in the PATH on Windows runners.
-        msbuild.exe build_ci\modloader.sln /p:Configuration=Debug /p:Platform=Win32 /p:RestorePackages=false /m /verbosity:minimal
+        MSBuild build_ci\modloader.sln /p:Configuration=Debug /p:Platform=Win32 /p:RestorePackages=false /m /verbosity:minimal
 
     - name: Upload Debug Build Artifacts
       uses: actions/upload-artifact@v4
