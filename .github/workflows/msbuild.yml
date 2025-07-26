@@ -1,0 +1,75 @@
+name: Build Mod Loader
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  build:
+    # Use a Windows runner, as this is a Windows-specific project.
+    # 'windows-latest' typically includes various Visual Studio versions and tools.
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@v4
+
+    - name: Setup Premake5
+      # Your premake5.lua implies premake5.exe is expected in the root.
+      # This step ensures it's there or downloads a common beta version if not.
+      run: |
+        $PremakeExePath = Join-Path $PSScriptRoot "premake5.exe"
+        if (-not (Test-Path $PremakeExePath)) {
+          Write-Host "premake5.exe not found in repository root. Attempting to download."
+          $DownloadUrl = "https://github.com/premake/premake-core/releases/download/v5.0.0-beta2/premake-5.0.0-beta2-windows.zip"
+          $ZipPath = Join-Path $PSScriptRoot "premake5.zip"
+          Invoke-WebRequest -Uri $DownloadUrl -OutFile $ZipPath
+          Expand-Archive -Path $ZipPath -DestinationPath $PSScriptRoot -Force
+          Remove-Item $ZipPath
+          Write-Host "Premake5 downloaded and extracted."
+        } else {
+          Write-Host "premake5.exe found in repository root."
+        }
+        # Add premake5.exe to PATH for the current session
+        $env:Path += ";${PSScriptRoot}"
+
+    - name: Generate Visual Studio Solution Files
+      # Use the 'vs2013' action as defined in your premake5.lua
+      # We specify --outdir to keep the generated project files separate for CI purposes.
+      run: .\premake5.exe vs2013 --outdir=build_ci
+
+    - name: Build Solution (Debug Configuration)
+      # Build the generated solution using MSBuild.
+      # We target 'Debug' configuration to ensure PDBs are generated.
+      # 'Win32' platform is used as it's typical for GTA:SA mods.
+      # MSBuild usually auto-detects toolsets; if it fails, you might need to
+      # explicitly specify a toolset using /p:PlatformToolset=v120_xp if available
+      # or upgrade the premake action to a newer VS version.
+      run: |
+        # Use MSBuild directly, it should be available in the PATH on Windows runners.
+        msbuild.exe build_ci\modloader.sln /p:Configuration=Debug /p:Platform=Win32 /p:RestorePackages=false /m /verbosity:minimal
+
+    - name: Upload Debug Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: modloader-debug-binaries
+        path: |
+          bin/                  # Contains the compiled DLLs, ASIs, and PDBs
+          build_ci/             # Contains the generated Visual Studio project files (useful for debugging CI issues)
+        retention-days: 7
+
+    - name: Build Solution (Release Configuration)
+      # Optional: Build the Release configuration as well.
+      run: |
+        msbuild.exe build_ci\modloader.sln /p:Configuration=Release /p:Platform=Win32 /p:RestorePackages=false /m /verbosity:minimal
+
+    - name: Upload Release Build Artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: modloader-release-binaries
+        path: bin/              # Contains the compiled DLLs, ASIs for Release
+        retention-days: 7
