@@ -228,21 +228,21 @@ solution "modloader"
         buildoptions { "/Zm250", "/bigobj" }    -- gta3.std.data is a monster
 
     configuration "vs2012"
-        toolset "v110_xp"
+        toolset "v110"
     configuration "vs2013"
-        toolset "v120_xp"
+        toolset "v120"
 
     configuration "vs2015"
-        toolset "v140_xp"
+        toolset "v140"
         buildoptions { "/Zc:threadSafeInit-" }
     configuration "vs2017"
-        toolset "v141_xp" -- Default toolset for Visual Studio 2017
+        toolset "v141" -- Default toolset for Visual Studio 2017
         buildoptions { "/Zc:threadSafeInit-" }
     configuration "vs2019"
-        toolset "v142_xp" -- Default toolset for Visual Studio 2019
+        toolset "v142" -- Default toolset for Visual Studio 2019
         buildoptions { "/Zc:threadSafeInit-" }
     configuration "vs2022"
-        toolset "v143_xp" -- Default toolset for Visual Studio 2022
+        toolset "v143" -- Default toolset for Visual Studio 2022
         buildoptions { "/Zc:threadSafeInit-" }
 
     project "docs"
