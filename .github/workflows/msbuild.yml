@@ -52,7 +52,7 @@ jobs:
     - name: Generate Visual Studio Solution Files
       # Use the 'vs2013' action as defined in your premake5.lua
       # We specify --outdir to keep the generated project files separate for CI purposes.
-      run: .\premake5.exe vs2022 --outdir=build_ci
+      run: .\premake5.exe vs2015 --outdir=build_ci
 
     - name: Build Solution (Debug Configuration)
       # Build the generated solution using MSBuild.
