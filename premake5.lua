@@ -231,8 +231,18 @@ solution "modloader"
         toolset "v110_xp"
     configuration "vs2013"
         toolset "v120_xp"
+
     configuration "vs2015"
         toolset "v140_xp"
+        buildoptions { "/Zc:threadSafeInit-" }
+    configuration "vs2017"
+        toolset "v141_xp" -- Default toolset for Visual Studio 2017
+        buildoptions { "/Zc:threadSafeInit-" }
+    configuration "vs2019"
+        toolset "v142_xp" -- Default toolset for Visual Studio 2019
+        buildoptions { "/Zc:threadSafeInit-" }
+    configuration "vs2022"
+        toolset "v143_xp" -- Default toolset for Visual Studio 2022
         buildoptions { "/Zc:threadSafeInit-" }
 
     project "docs"
